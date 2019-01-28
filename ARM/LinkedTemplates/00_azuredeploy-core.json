@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+        "parameters": {
+        "vaultName": {
+            "type": "string"
+            "defaultValue": "myKeyVaultName"
+        },
+        "vaultResourceGroup": {
+            "type": "string"
+            "defaultValue": "myKeyVaultResourceGroupName"
+        },
+        "secretName": {
+            "type": "string"
+            "defaultValue": "myKeyVaultSecretName"
+        }
+    },
+        "resources": [{
+        "apiVersion": "2015-01-01",
+        "name": "InfrastructureDeployment",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+            "mode": "incremental",
+            "templateLink": {
+                "uri": "https://raw.githubusercontent.com/azureandbeyond/AzureSecurity/master/ARM/LinkedTemplates/01_azuredeploy-infra.json",
+                "contentVersion": "1.0.0.0"
+            },
+            "parameters": {
+                "adminPassword": {
+                    "reference": {
+                        "keyVault": {
+                            "id": "[resourceId(subscription().subscriptionId,  parameters('VaultResourceGroup'), 'Microsoft.KeyVault/vaults', parameters('vaultName'))]"
+                        },
+                        "secretName": "[parameters('secretName')]"
+                    }
+                }
+            }
+        }
+    }],
+    "outputs": {
+        "storageAccountName": {
+            "type": "string",
+            "value": "[reference('AzureSecLab-Infra').outputs.storageAccountName.value]"
+        }
+    }
+}
