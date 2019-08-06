@@ -3,7 +3,7 @@
 # Azure Key Vault data source to access local admin password
 data "azurerm_key_vault_secret" "mySecret" {
   name      = "labuser"
-  vault_uri = "https://yourKeyVault.vault.azure.net/"
+  key_vault_id = "/subscriptions/GUID/resourceGroups/RGName/providers/Microsoft.KeyVault/vaults/VaultName"
 }
 
 # get my external IP address to enter into NSG rule
